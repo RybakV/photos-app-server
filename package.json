@@ -1,0 +1,26 @@
+{
+  "name": "photos-app-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RybakV/photos-app-server.git"
+  },
+  "keywords": [
+    "node",
+    "server",
+    "keksogram",
+    "backend"
+  ],
+  "author": "RybakV",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RybakV/photos-app-server/issues"
+  },
+  "homepage": "https://github.com/RybakV/photos-app-server#readme"
+}
