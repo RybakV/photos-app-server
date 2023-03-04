@@ -6,7 +6,7 @@ const port = 4000;
 const postsQuantity = 25;
 const avatarsQuantity = 6;
 const likesRange = { min: 25, max: 200 };
-const commentsRange = { min: 1, max: 13 };
+const commentsRange = { min: 0, max: 26 };
 
 const descriptions = [
     'Це фото було зроблено у відпустці минулого року',
@@ -71,7 +71,10 @@ function createPost(id){
         avatar: `./img/avatar-${getRandomNumber(1,avatarsQuantity)}.svg`,
         description: descriptions[getRandomNumber(1, descriptions.length - 1)],
         likes: getRandomNumber(likesRange.min,likesRange.max),
-        comments: commentaries
+        comments: commentaries,
+        tags: [],
+        cssFilter: '',
+        zoom: 1,
     }
 }
 
@@ -107,6 +110,7 @@ fs.writeFileSync('photos-data.txt', JSON.stringify(posts));
 
 http.createServer(function (req, res) {
     res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requeted-With, Content-Type, Accept, Authorization, RBR");
 
     res.writeHead(200, {'Content-Type': 'application/json'});
     const url = req.url;
@@ -115,11 +119,33 @@ http.createServer(function (req, res) {
         const data = fs.readFileSync('photos-data.txt', 'utf8');
         res.end(data);
     }
+    else if(url ==='/photo-upload') {
+
+        let body = '';
+        req.on("data", (data) => {
+            let stringData = data.toString('utf8');
+            let newPhotoData = JSON.parse(stringData.trim());
+            newPhotoData.id = posts.length + 1;
+            newPhotoData.avatar = `./img/avatar-${getRandomNumber(1,avatarsQuantity)}.svg`;
+            newPhotoData.likes = getRandomNumber(likesRange.min,likesRange.max);
+            newPhotoData.comments = createComment(getRandomNumber(commentsRange.min, commentsRange.max));
+
+            body = JSON.stringify(newPhotoData);
+        });
+
+        req.on('end', () => {
+            res.end(body);
+        });
+
+
+    }
     else {
         res.write('Wrong route');
         res.end();
     }
 
+
 }).listen(port, host, () => {
     console.log(`Server is running on http://${host}:${port}`);
 });
+
